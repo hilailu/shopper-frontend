@@ -28,6 +28,9 @@ const ProductComponent = () => {
                 setQuantity(response.data.quantity);
             }).catch(error => {
                 console.error(error);
+                if (error.response && error.response.status === 403) {
+                    navigator("/error")
+                }
             })
         }
     }, [id]);
@@ -62,6 +65,9 @@ const ProductComponent = () => {
                     navigator("/products");
                 }).catch(error => {
                     console.error(error);
+                    if (error.response && error.response.status === 403) {
+                        navigator("/error")
+                    }
                 })
             } else {
                 createProduct(product).then((response) => {
@@ -69,6 +75,9 @@ const ProductComponent = () => {
                     navigator("/products");
                 }).catch(error => {
                     console.error(error);
+                    if (error.response && error.response.status === 403) {
+                        navigator("/error")
+                    }
                 })
             }
         }

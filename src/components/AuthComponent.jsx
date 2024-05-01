@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {login, register} from "../services/AuthService.js";
 import '../main.css'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [loginData, setLoginData] = useState({ login: '', password: '' });
@@ -9,6 +9,8 @@ const Login = () => {
         login: '',
         password: ''
     })
+
+    const navigator = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,6 +39,7 @@ const Login = () => {
         try {
             const response = await login(loginData);
             console.log(response.data);
+            navigator("/profile")
         } catch (error) {
             console.error('Login failed', error);
         }
@@ -85,6 +88,7 @@ const Register = () => {
         password: ''
     })
 
+    const navigator = useNavigate();
     const handleChange = (e) => {
         const {name, value} = e.target;
         setRegisterData({...registerData, [name]: value});
@@ -121,6 +125,7 @@ const Register = () => {
         try {
             const response = await register(registerData);
             console.log(response.data);
+            navigator("/profile");
         } catch (error) {
             console.error('Registration failed', error);
         }

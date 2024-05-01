@@ -17,6 +17,7 @@ const ListProductComponent = () => {
             setProducts(response.data);
         }).catch(error => {
             console.error(error);
+            navigator("/error")
         });
     }
 

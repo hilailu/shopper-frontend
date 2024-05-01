@@ -2,25 +2,49 @@ import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faUser, faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import {useNavigate} from "react-router-dom";
+import {redirect} from "../services/AuthService.js";
 
 library.add(faUser, faCartShopping);
 
 const HeaderComponent = () => {
+
+    const navigator = useNavigate();
+
+    const handleCartClick = () => {
+        navigator('/cart');
+    };
+
+    const handleUserClick = async () => {
+        await redirect()
+            .then(response => {
+                const redirectUrl = response.data;
+                navigator(redirectUrl);
+            })
+            .catch(error => {
+                console.error('Failed to determine redirection URL', error);
+            });
+    }
+
     return (
         <div>
-            <header className="header mt-auto py-3 bg-dark">
+            <header className="p-3 bg-dark text-white">
                 <div className="container">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <a href="">Shopper.</a>
-                        </div>
-                        <div className="col-md-6 text-right">
-                            <button type="button" className="btn btn-dark">
-                                <FontAwesomeIcon icon="cart-shopping" />
-                            </button>
-                            <button id="userButton" type="button" className="btn btn-dark">
-                                <FontAwesomeIcon icon="user" />
-                            </button>
+                    <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                        <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                            <li><a href="/catalog" className="nav-link px-2 text-white">Shopper.</a></li>
+                        </ul>
+
+                        <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                            <input type="search" className="form-control form-control-dark" placeholder="Search..."
+                                   aria-label="Search"/>
+                        </form>
+
+                        <div className="text-end">
+                            <button type="button" className="btn btn-outline-light me-2" onClick={handleCartClick}>
+                                <FontAwesomeIcon icon="cart-shopping"/></button>
+                            <button type="button" className="btn btn-outline-light me-2" onClick={handleUserClick}>
+                                <FontAwesomeIcon icon="user"/></button>
                         </div>
                     </div>
                 </div>
@@ -28,4 +52,5 @@ const HeaderComponent = () => {
         </div>
     )
 }
+
 export default HeaderComponent
