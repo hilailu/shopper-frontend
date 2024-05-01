@@ -109,7 +109,7 @@ const ProfileComponent = () => {
             errorsCopy.email = 'Invalid email address';
         }
 
-        if (errorsCopy.email|| errorsCopy.login){
+        if (errorsCopy.email|| errorsCopy.login || errorsCopy.phoneNumber || errorsCopy.customerName){
             setErrors(errorsCopy);
             return;
         }

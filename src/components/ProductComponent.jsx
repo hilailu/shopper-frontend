@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {createProduct, getProduct, updateProduct} from "../services/ProductService.js";
 import {useNavigate, useParams} from "react-router-dom";
+import '../main.css'
 
 const ProductComponent = () => {
 
@@ -131,37 +132,54 @@ const ProductComponent = () => {
     }
 
     return (
-        <div className="container">
+        <div className="main container">
         <br/>
-            <div className="row">
-                <div className="card col-md-6 offset-md-3 offset-md-3">
+                <div className="card col-md-4">
                     <br/>
                     {pageTitle()}
                     <div className="card-body">
                         <form>
-                            <div className="form-group mb-2">
+                            <div className="row col-8 offset-2">
                                 <input type="text" placeholder="Product Name" name="productName" value={productName}
-                                       className={`form-control ${errors.productName ? 'is-invalid' : ''}`} onChange={handleProductName}/>
-                                {errors.productName && <div className="invalid-feedback">{errors.productName}</div>}
-
-                                <input type="text" placeholder="Product Description" name="productDescription" value={productDescription}
-                                       className={`form-control ${errors.productDescription ? 'is-invalid' : ''}`} onChange={handleProductDescription}/>
-                                {errors.productDescription && <div className="invalid-feedback">{errors.productDescription}</div>}
-
-                                <input type="text" placeholder="Price" name="price" value={price}
-                                       className={`form-control ${errors.price ? 'is-invalid' : ''}`} onChange={handlePrice}/>
-                                {errors.price && <div className="invalid-feedback">{errors.price}</div>}
-
-                                <input type="text" placeholder="Quantity" name="quantity" value={quantity}
-                                       className={`form-control ${errors.quantity ? 'is-invalid' : ''}`} onChange={handleQuantity}/>
-                                {errors.quantity && <div className="invalid-feedback">{errors.quantity}</div>}
-
+                                       className={`form-control ${errors.productName ? 'is-invalid' : ''}`}
+                                       onChange={handleProductName}/>
                             </div>
-                            <button className="btn btn-success" onClick={saveOrUpdateProduct}>Save</button>
+                                {errors.productName && <div className="row col-8 offset-2 invalid-feedback">{errors.productName}</div>}
+                            <br/>
+
+                                <div className="row col-8 offset-2">
+                                    <input type="text" placeholder="Product Description" name="productDescription"
+                                           value={productDescription}
+                                           className={`form-control ${errors.productDescription ? 'is-invalid' : ''}`}
+                                           onChange={handleProductDescription}/>
+                                </div>
+
+                                {errors.productDescription &&
+                                    <div className="invalid-feedback">{errors.productDescription}</div>}
+                            <br/>
+
+                                <div className="row col-8 offset-2">
+                                    <input type="text" placeholder="Price" name="price" value={price}
+                                           className={`form-control ${errors.price ? 'is-invalid' : ''}`}
+                                           onChange={handlePrice}/>
+                                </div>
+
+                                {errors.price && <div className="invalid-feedback">{errors.price}</div>}
+                            <br/>
+
+                                <div className="row col-8 offset-2">
+                                    <input type="text" placeholder="Quantity" name="quantity" value={quantity}
+                                           className={`form-control ${errors.quantity ? 'is-invalid' : ''}`}
+                                           onChange={handleQuantity}/>
+                                </div>
+                                {errors.quantity && <div className="invalid-feedback">{errors.quantity}</div>}
+                            <br/>
+
+                                <button type="submit" className="btn btn-primary col-8 offset-2" onClick={saveOrUpdateProduct}>Save</button>
                         </form>
+                        <br/>
                     </div>
                 </div>
-            </div>
         </div>
     )
 }

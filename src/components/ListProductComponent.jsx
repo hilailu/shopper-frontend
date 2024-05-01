@@ -22,11 +22,11 @@ const ListProductComponent = () => {
     }
 
     function addNewProduct(){
-        navigator('/add_product');
+        navigator('/admin/add_product');
     }
 
     function editProduct(id){
-        navigator(`/edit_product/${id}`);
+        navigator(`/admin/edit_product/${id}`);
     }
 
     function delProduct(id){
@@ -41,7 +41,7 @@ const ListProductComponent = () => {
         <div className="container">
             <h2 className="text-center">Products</h2>
             <button className="btn btn-primary" onClick={addNewProduct}>Add Product</button>
-            <table className="table table-striped table-bordered">
+            <table className="table table-bordered table-hover">
                 <thead>
                 <tr>
                     <th>Id</th>
