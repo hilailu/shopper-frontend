@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {filterCatalog, showCatalog} from "../services/ProductService.js";
+import { useCart } from '../CartContext';
 
 const CatalogComponent = () => {
     const [category, setCategory] = useState('');
@@ -10,6 +11,8 @@ const CatalogComponent = () => {
     const [name, setName] = useState('');
 
     const [products, setProducts] = useState([])
+
+    const { addToCart } = useCart();
 
     useEffect(() => {
         getAllProducts();
@@ -40,8 +43,8 @@ const CatalogComponent = () => {
         });
     };
 
-    const handleAddToCart = (productId) => {
-        // Logic to add product to cart
+    const handleAddToCart = (product) => {
+        addToCart(product);
     };
 
     return (
@@ -143,7 +146,7 @@ const CatalogComponent = () => {
                                         <p className="card-text">${product.price}</p>
                                     </div>
                                     <div className="card-footer">
-                                        <button className="btn btn-primary" onClick={() => handleAddToCart(product.id)}>Add to Cart</button>
+                                        <button className="btn btn-primary" onClick={() => handleAddToCart(product)}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>

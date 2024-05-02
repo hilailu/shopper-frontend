@@ -8,11 +8,14 @@ import {Login, Register} from "./components/AuthComponent.jsx";
 import ProfileComponent from "./components/ProfileComponent.jsx";
 import ErrorComponent from "./components/ErrorComponent.jsx";
 import CatalogComponent from "./components/CatalogComponent.jsx";
+import {CartProvider} from "./CartContext.jsx";
+import CartComponent from "./components/CartComponent.jsx";
 
 function App() {
 
   return (
     <>
+        <CartProvider>
         <BrowserRouter>
         <HeaderComponent></HeaderComponent>
             <Routes>
@@ -23,6 +26,7 @@ function App() {
 
                 <Route path='/profile' element={<ProfileComponent />} />
                 <Route path='/catalog' element={<CatalogComponent />} />
+                <Route path='/cart' element={<CartComponent />} />
 
                 <Route path='/error' element={<ErrorComponent />} />
 
@@ -32,6 +36,7 @@ function App() {
             </Routes>
         <FooterComponent></FooterComponent>
         </BrowserRouter>
+        </CartProvider>
     </>
   )
 }
