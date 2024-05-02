@@ -39,6 +39,11 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem('cart');
+    };
+
     const handleChangeAmount = (productId, amount) => {
         const updatedCart = cartItems.map((item) => {
             if (item.id === productId) {
@@ -51,7 +56,7 @@ export const CartProvider = ({ children }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, handleChangeAmount }}>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, handleChangeAmount, clearCart }}>
             {children}
         </CartContext.Provider>
     );

@@ -1,9 +1,13 @@
 import React from 'react';
 import { useCart } from '../CartContext';
 import '../main.css'
+import {useNavigate} from "react-router-dom";
+import {orderProducts} from "../services/OrderService.js";
 
 function CartComponent() {
-    const { cartItems, removeFromCart, handleChangeAmount } = useCart();
+    const { cartItems, removeFromCart, handleChangeAmount, clearCart } = useCart();
+
+    const navigator = useNavigate();
 
     const handleRemoveFromCart = (productId) => {
         removeFromCart(productId);
@@ -14,6 +18,22 @@ function CartComponent() {
             return total + (item.price * item.amount);
         }, 0).toFixed(2);
     };
+
+    const order = async () => {
+        const orderRequest = {
+            orderProducts: cartItems.map(item => ({
+                productId: item.id,
+                quantity: item.amount
+            }))
+        };
+
+        orderProducts(orderRequest).then((response) => {
+            clearCart();
+            navigator("/profile");
+        }).catch(error => {
+            console.error(error);
+        });
+    }
 
     return (
         <div className="catalog container">
@@ -49,7 +69,7 @@ function CartComponent() {
                     <div className="card-body">
                         <h5 className="card-title">Summary</h5>
                         <p>Total Price: ${calculateTotalPrice()}</p>
-                        <button className="btn btn-primary">Order</button>
+                        <button className="btn btn-primary" onClick={() => order()}>Order</button>
                     </div>
                 </div>
             </div>

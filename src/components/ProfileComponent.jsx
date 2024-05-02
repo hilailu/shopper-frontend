@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {faCircleUser} from "@fortawesome/free-solid-svg-icons";
 import {getCustomer, saveCustomer} from "../services/ProfileService.js";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {logout} from "../services/AuthService.js";
 import '../main.css'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -88,6 +88,10 @@ const ProfileComponent = () => {
         }
     }
 
+    const showOrders = () => {
+        navigator("/orders");
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -140,29 +144,34 @@ const ProfileComponent = () => {
                     <br/>
 
                     <div className="row col-8 offset-2">
-                        <input type="text" name="phoneNumber" placeholder="Phone Number" value={customerData.phoneNumber} onChange={handleChange}/>
+                        <input type="text" name="phoneNumber" placeholder="Phone Number"
+                               value={customerData.phoneNumber} onChange={handleChange}/>
                     </div>
                     {errors.phoneNumber && <div className="row col-8 offset-2 text-danger">{errors.phoneNumber}</div>}
                     <br/>
 
                     <div className="row col-8 offset-2">
-                        <input type="email" name="user.email" placeholder="Email" value={customerData.user.email} onChange={handleChange}/>
+                        <input type="email" name="user.email" placeholder="Email" value={customerData.user.email}
+                               onChange={handleChange}/>
                     </div>
                     {errors.email && <div className="row col-8 offset-2 text-danger">{errors.email}</div>}
                     <br/>
 
                     <div className="row col-8 offset-2">
-                        <input type="text" name="user.login" placeholder="Login" value={customerData.user.login} onChange={handleChange}/>
+                        <input type="text" name="user.login" placeholder="Login" value={customerData.user.login}
+                               onChange={handleChange}/>
                     </div>
                     {errors.login && <div className="row col-8 offset-2 text-danger">{errors.login}</div>}
                     <br/>
 
-                    <button className="btn btn-primary col-8 offset-2" type="submit">Save</button>
+                    <button className="btn btn-success col-8 offset-2" type="submit">Save</button>
                     <br/>
                     <br/>
 
                 </form>
-
+                <button className="btn btn-primary col-8 offset-2" onClick={showOrders}>My orders</button>
+                <br/>
+                <br/>
                 <button className="btn btn-danger col-8 offset-2" onClick={handleLogout}>Logout</button>
                 <br/>
                 <br/>

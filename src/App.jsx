@@ -10,6 +10,7 @@ import ErrorComponent from "./components/ErrorComponent.jsx";
 import CatalogComponent from "./components/CatalogComponent.jsx";
 import {CartProvider} from "./CartContext.jsx";
 import CartComponent from "./components/CartComponent.jsx";
+import CustomerOrderComponent from "./components/CustomerOrderComponent.jsx";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
                 <Route path='/profile' element={<ProfileComponent />} />
                 <Route path='/catalog' element={<CatalogComponent />} />
                 <Route path='/cart' element={<CartComponent />} />
+                <Route path='/orders' element={<CustomerOrderComponent />} />
 
                 <Route path='/error' element={<ErrorComponent />} />
 
