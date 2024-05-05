@@ -10,6 +10,9 @@ const AdminPanel = () => {
                 <Link to="/admin/products" className="btn btn-primary">
                     Products
                 </Link>
+                <Link to="/admin/categories" className="btn btn-primary">
+                    Categories
+                </Link>
                 <Link to="/admin/orders" className="btn btn-primary">
                     Orders
                 </Link>

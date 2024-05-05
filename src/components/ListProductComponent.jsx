@@ -50,6 +50,7 @@ const ListProductComponent = () => {
                     <th>Id</th>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Categories</th>
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Actions</th>
@@ -62,6 +63,7 @@ const ListProductComponent = () => {
                             <td>{product.id}</td>
                             <td>{product.productName}</td>
                             <td>{product.productDescription}</td>
+                            <td>{product.categories.map(category => category.categoryName).join(', ')}</td>
                             <td>{product.price}</td>
                             <td>{product.quantity}</td>
                             <td>
