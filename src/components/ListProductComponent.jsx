@@ -39,8 +39,11 @@ const ListProductComponent = () => {
 
     return (
         <div className="container">
+            <br/>
             <h2 className="text-center">Products</h2>
             <button className="btn btn-primary" onClick={addNewProduct}>Add Product</button>
+            <br/>
+            <br/>
             <table className="table table-bordered table-hover">
                 <thead>
                 <tr>

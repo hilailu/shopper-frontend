@@ -11,6 +11,12 @@ import CatalogComponent from "./components/CatalogComponent.jsx";
 import {CartProvider} from "./CartContext.jsx";
 import CartComponent from "./components/CartComponent.jsx";
 import CustomerOrderComponent from "./components/CustomerOrderComponent.jsx";
+import OrderComponent from "./components/OrderComponent.jsx";
+import AdminPanel from "./components/AdminPanel.jsx";
+
+function UserComponent() {
+    return null;
+}
 
 function App() {
 
@@ -32,9 +38,13 @@ function App() {
 
                 <Route path='/error' element={<ErrorComponent />} />
 
+                <Route path='/admin/' element={<AdminPanel />} />
                 <Route path='/admin/products' element={<ListProductComponent />} />
                 <Route path='/admin/add_product' element={<ProductComponent />} />
                 <Route path='/admin/edit_product/:id' element={<ProductComponent />} />
+                <Route path='/admin/orders' element={<OrderComponent />} />
+                <Route path='/admin/users' element={<UserComponent />} />
+
             </Routes>
         <FooterComponent></FooterComponent>
         </BrowserRouter>
