@@ -2,14 +2,22 @@ import React, {useEffect, useState} from 'react'
 import {createSupply, getSupply, updateSupply} from "../services/SupplyService.js";
 import {useNavigate, useParams} from "react-router-dom";
 import '../main.css'
+import {listVendors} from "../services/VendorService.js";
+import {listProducts} from "../services/ProductService.js";
+import Select from "react-select";
 
 const SupplyComponent = () => {
 
     const [date, setDate] = useState('');
     const [price, setPrice] = useState('');
     const [amount, setAmount] = useState('');
-    const [vendor, setVendor] = useState('');
-    const [product, setProduct] = useState('');
+    const [product, setProduct] = useState([]);
+    const [selectProducts, setSelectProducts] = useState([]);
+    const [fetchedProducts, setFetchedProducts] = useState([]);
+
+    const [vendor, setVendor] = useState([]);
+    const [selectVendors, setSelectVendors] = useState([]);
+    const [fetchedVendors, setFetchedVendors] = useState([]);
 
     const {id} = useParams();
     const [errors, setErrors] = useState({
@@ -23,13 +31,14 @@ const SupplyComponent = () => {
     const navigator = useNavigate();
 
     useEffect(() => {
+        fetchVendorsAndProducts();
         if (id){
             getSupply(id).then((response) => {
-                setDate(response.data.date);
+                setDate(response.data.date.slice(0, -13));
                 setPrice(response.data.price);
                 setAmount(response.data.amount);
-                setVendor(response.data.vendor);
-                setProduct(response.data.product);
+                setVendor(vendorToOption(response.data.vendor));
+                setProduct(productToOption(response.data.product));
             }).catch(error => {
                 console.error(error);
                 if (error.response && error.response.status === 403) {
@@ -38,6 +47,93 @@ const SupplyComponent = () => {
             })
         }
     }, [id]);
+
+    function fetchVendorsAndProducts() {
+        listVendors()
+            .then(data => {
+                setFetchedVendors(data.data);
+                setSelectVendors(transformVendorsToOption(data.data));
+            })
+            .catch(error => {
+                console.error(error);
+                if (error.response && error.response.status === 403) {
+                    navigator("/error")
+                }
+            });
+
+        listProducts()
+            .then(data => {
+                setFetchedProducts(data.data);
+                setSelectProducts(transformProductToOption(data.data));
+            })
+            .catch(error => {
+                console.error(error);
+                if (error.response && error.response.status === 403) {
+                    navigator("/error")
+                }
+            });
+    }
+
+    const transformOptionToVendor = (option) => {
+        const matchingVendor = fetchedVendors.find(vendor => vendor.vendorName === option.value);
+        if (matchingVendor) {
+            return {
+                id: matchingVendor.id,
+                vendorName: matchingVendor.vendorName,
+                email: matchingVendor.email,
+                phoneNumber: matchingVendor.phoneNumber,
+                country: matchingVendor.country
+            };
+        } else {
+            return null;
+        }
+    };
+
+    function transformVendorsToOption(data) {
+        return data.map(vendor => vendorToOption(vendor));
+    }
+
+    function vendorToOption(vendor) {
+        return {
+            value: vendor.vendorName,
+            label: vendor.vendorName
+        };
+    }
+
+    const transformOptionToProduct = (option) => {
+        const matchingProduct = fetchedProducts.find(product => product.productName === option.value);
+        if (matchingProduct) {
+            return {
+                id: matchingProduct.id,
+                productName: matchingProduct.productName,
+                productDescription: matchingProduct.productDescription,
+                price: matchingProduct.price,
+                quantity: matchingProduct.quantity
+            };
+        } else {
+            return null;
+        }
+    };
+
+    function transformProductToOption(data)
+    {
+        return data.map(product => productToOption(product));
+    }
+
+    function productToOption(product) {
+        return {
+            value: product.productName,
+            label: product.productName
+        };
+    }
+
+    function handleProductChange(option) {
+        setProduct(option);
+    }
+
+    function handleVendorChange(option) {
+        setVendor(option);
+    }
 
     function handleDate(e){
         setDate(e.target.value);
@@ -51,16 +147,14 @@ const SupplyComponent = () => {
         setAmount(e.target.value);
     }
 
-    function handleVendor(e){
-        setVendor(e.target.value);
-    }
-
     function saveOrUpdateSupply(e){
         e.preventDefault();
 
         if (validateForm())
         {
-            const supply = {date, price, amount, vendor, product};
+            let v = transformOptionToVendor(vendor);
+            let p = transformOptionToProduct(product);
+            const supply = {date, price, amount, vendor: v, product: p};
             console.log(supply);
 
             if (id) {
@@ -91,35 +185,37 @@ const SupplyComponent = () => {
         let valid = true;
         const errorsCopy = {... errors};
 
-        if (date.trim()) {
+        if (validateDateTimeLocal(date)) {
             errorsCopy.date = '';
         } else {
-            errorsCopy.date = 'Supply name is required';
+            errorsCopy.date = 'Supply date is required';
             valid = false;
         }
 
-        if (price.trim()) {
+        const convertedPrice = Number(price);
+        if (!isNaN(convertedPrice) && convertedPrice > 0) {
             errorsCopy.price = '';
         } else {
-            errorsCopy.price = 'Phone number is required';
+            errorsCopy.price = 'Price is required';
             valid = false;
         }
 
-        if (amount.trim()) {
+        const convertedAmount = Number(amount);
+        if (!isNaN(convertedAmount) && convertedAmount > 0) {
             errorsCopy.amount = '';
         } else {
             errorsCopy.amount = 'Amount is required';
             valid = false;
         }
 
-        if (vendor.trim()) {
+        if (vendor != null) {
             errorsCopy.vendor = '';
         } else {
             errorsCopy.vendor = 'Vendor is required';
             valid = false;
         }
 
-        if (product.trim()) {
+        if (product != null) {
             errorsCopy.product = '';
         } else {
             errorsCopy.product = 'Product is required';
@@ -139,6 +235,23 @@ const SupplyComponent = () => {
         }
     }
 
+    function validateDateTimeLocal(datetime) {
+        const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+        return regex.test(datetime);
+    }
+
+    function convertIsoToDatetimeLocal(isoDateString) {
+        const date = new Date(isoDateString);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
     return (
         <div className="main container">
             <br/>
@@ -148,7 +261,7 @@ const SupplyComponent = () => {
                 <div className="card-body">
                     <form>
                         <div className="row col-8 offset-2">
-                            <input type="text" placeholder="Supply Name" name="date" value={date}
+                            <input type="datetime-local" placeholder="Supply Date" name="date" value={convertIsoToDatetimeLocal(date)}
                                    className={`form-control ${errors.date ? 'is-invalid' : ''}`}
                                    onChange={handleDate}/>
                         </div>
@@ -156,7 +269,7 @@ const SupplyComponent = () => {
                         <br/>
 
                         <div className="row col-8 offset-2">
-                            <input type="text" placeholder="Phone number" name="price"
+                            <input type="text" placeholder="Price" name="price"
                                    value={price}
                                    className={`form-control ${errors.price ? 'is-invalid' : ''}`}
                                    onChange={handlePrice}/>
@@ -176,17 +289,25 @@ const SupplyComponent = () => {
                         <br/>
 
                         <div className="row col-8 offset-2">
-                            <input type="text" placeholder="Vendor" name="vendor" value={vendor.id}
-                                   className={`form-control ${errors.vendor ? 'is-invalid' : ''}`}
-                                   onChange={handleVendor}/>
+                            <Select
+                                name="vendor"
+                                placeholder="Vendor"
+                                value={vendor}
+                                options={selectVendors}
+                                onChange={handleVendorChange}
+                            />
                         </div>
                         {errors.vendor && <div className="invalid-feedback">{errors.vendor}</div>}
                         <br/>
 
                         <div className="row col-8 offset-2">
-                            <input type="text" placeholder="Product" name="product" value={product.id}
-                                   className={`form-control ${errors.product ? 'is-invalid' : ''}`}
-                                   onChange={handleVendor}/>
+                            <Select
+                                name="product"
+                                placeholder="Product"
+                                value={product}
+                                options={selectProducts}
+                                onChange={handleProductChange}
+                            />
                         </div>
                         {errors.product && <div className="invalid-feedback">{errors.product}</div>}
                         <br/>

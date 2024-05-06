@@ -57,7 +57,7 @@ const VendorComponent = () => {
 
         if (validateForm())
         {
-            const vendor = {vendorName, phoneNumber, email, country};
+            const vendor = {vendorName, email, phoneNumber, country};
             console.log(vendor);
 
             if (id) {
@@ -162,7 +162,7 @@ const VendorComponent = () => {
                         <br/>
 
                         <div className="row col-8 offset-2">
-                            <input type="text" placeholder="Email" name="email" value={email}
+                            <input type="email" placeholder="Email" name="email" value={email}
                                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                    onChange={handleEmail}/>
                         </div>

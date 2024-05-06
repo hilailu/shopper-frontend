@@ -33,7 +33,7 @@ const ProductComponent = () => {
                 setProductDescription(response.data.productDescription);
                 setPrice(response.data.price);
                 setQuantity(response.data.quantity);
-                setCategories(response.data.categories);
+                setCategories(transformCategoryToOption(response.data.categories));
             }).catch(error => {
                 console.error(error);
                 if (error.response && error.response.status === 403) {
@@ -47,13 +47,7 @@ const ProductComponent = () => {
         listCategories()
             .then(data => {
                 setFetchedCategories(data.data);
-
-                const transformedCategories = data.data.map(category => ({
-                    value: category.categoryName,
-                    label: category.categoryName
-                }));
-
-                setSelectCategories(transformedCategories);
+                setSelectCategories(transformCategoryToOption(data.data));
             })
             .catch(error => {
             console.error(error);
@@ -83,21 +77,28 @@ const ProductComponent = () => {
         setQuantity(e.target.value);
     }
 
-    const transformOptionToCategory = (option, fetchedCategories) => {
-        const matchingCategory = fetchedCategories.find(category => category.categoryName === option.value);
-        if (matchingCategory) {
-            return [
-                {
+    const transformOptionToCategory = (options, fetchedCategories) => {
+        return options.map(option => {
+            const matchingCategory = fetchedCategories.find(category => category.categoryName === option.value);
+            if (matchingCategory) {
+                return {
                     id: matchingCategory.id,
                     categoryName: matchingCategory.categoryName,
                     categoryDescription: matchingCategory.categoryDescription
-                }
-                ]
-            ;
-        } else {
-            return null;
-        }
+                };
+            } else {
+                return null;
+            }
+        }).filter(category => category !== null);
     };
+
+    function transformCategoryToOption(data)
+    {
+        return data.map(category => ({
+            value: category.categoryName,
+            label: category.categoryName
+        }));
+    }
 
     function saveOrUpdateProduct(e){
         e.preventDefault();
@@ -231,7 +232,7 @@ const ProductComponent = () => {
                                     value={categories}
                                     options={selectCategories}
                                     onChange={handleMultiChange}
-                                    multi
+                                    isMulti={true}
                                 />
                             </div>
                             <br/>
