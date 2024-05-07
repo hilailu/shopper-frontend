@@ -29,7 +29,7 @@ function CartComponent() {
 
         orderProducts(orderRequest).then((response) => {
             clearCart();
-            navigator("/profile");
+            navigator("/orders");
         }).catch(error => {
             console.error(error);
         });
